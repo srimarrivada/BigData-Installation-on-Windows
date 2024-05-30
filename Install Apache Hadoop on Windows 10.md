@@ -1,13 +1,14 @@
-# Install Apache Hadoop on Windows 10
+# Install Apache Hadoop 3.3.6 on Windows 10
 **Apache Hadoop** was introduced to handle Big Data in a distributed manner with parallel computation. Hadoop follows Master-Slave architecture in which Master node communicates to Slave nodes. 
 Hadoop ecosystem consists of **HDFS** (Hadoop Distributed File System), **Resource Manager** (YARN) and **Computation Engine** (MapReduce).
 
 The core components of Hadoop include **NameNode**, **DataNode**, **ResourceManager** (including Scheduler and ApplicationManager), **NodeManager** and ApplicationMaster.
 
-Follow these steps to install Apache Hadoop 3.3.6 release on Windows 10 operating system. You can also go through [this PDF document](doc/Install%20Apache%20Hadoop%20on%20Windows%2010.pdf) for installation steps along with screenshots.
+Follow these steps to install Apache Hadoop 3.3.6 release on Windows 10 operating system. 
+You can also go through [this PDF document](doc/Install%20Apache%20Hadoop%20on%20Windows%2010.pdf) for installation steps along with screenshots.
 <br/>
 <br/>
-## Prerequisites:
+## 1. Prerequisites:
 The following prerequisites need to be installed before running Hadoop.
 1. **JRE 8:** Hadoop 3.x requires Java 8 runtime environment. See [Hadoop Java versions](https://cwiki.apache.org/confluence/display/HADOOP/Hadoop+Java+Versions) for details.  
 We can either download just **JRE 8** (Java Runtime Environment) for Windows offline installation from the official [Java Download for Windows Offline](https://www.java.com/en/download/windows_offline.jsp) website or download the whole **JDK 8** (Java Development Kit) directly from [Oracle Java Downloads](https://www.oracle.com/java/technologies/downloads/#java8) website. For the complete JDK installation steps, look at [here](https://github.com/srimarrivada/JDK-Installation/blob/main/Install%20JDK8%20on%20Windows.md). 
@@ -16,12 +17,12 @@ We can either download just **JRE 8** (Java Runtime Environment) for Windows off
 7zip can be downloaded from the [official 7zip Downloads](https://www.7-zip.org/download.html) website and WinRAR can be downloaded from the [official RAR lab Downloads](https://www.rarlab.com/download.htm) website.
 <br/>
 
-## Download Hadoop Binaries: 
-Download the latest Hadoop 3.3.6 release from the [Apache Hadoop Downloads](https://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-3.3.6) mirror website.
-You need to download the binary file named `hadoop-3.3.6.tar.gz` file which gets downloaded to your **Downloads** folder.
+## 2. Download Hadoop Binaries: 
+Download the latest Hadoop 3.3.6 release from the [Apache Hadoop Downloads](https://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-3.3.6) mirror website.  
+Go to the [suggested location](https://dlcdn.apache.org/hadoop/common/hadoop-3.3.6/) for download from where you need to download the binary file named `hadoop-3.3.6.tar.gz` file which gets downloaded to your **Downloads** folder.
 
-After the binary file is downloaded:
-1. Choose the installation directory in your machine and copy `hadoop-3.3.6.tar.gz` file to that directory. Let us copy it to `D:\ProgramFiles\Hadoop` location.
+After the binary file is downloaded, unpack it using any file archiver (7zip or WinRAR) utility as below:
+1. Choose the installation directory in your machine and copy `hadoop-3.3.6.tar.gz` file to that directory. Here, we are choosing the Hadoop installation directory as `D:\ProgramFiles\Hadoop`.
 
 2. In the installation directory, right click on `hadoop-3.3.6.tar.gz` file and choose "Extract Here" or "7-Zip -> Extract Here" option which extracts a new packed file `hadoop-3.3.6.tar`.
 
@@ -33,30 +34,32 @@ After the binary file is downloaded:
 
 **Note:** Hadoop by default does not provide native IO libraries to run on Windows operating system, so it is necessary to add Hadoop windows utilities that can be found at [cdarlint Winutils GitHub repository](https://github.com/cdarlint/winutils) for the corresponding Hadoop version installed.
 
-6. Since we installed `hadoop-3.3.6` version, download windows utilities for Hadoop 3.3.6 version from [hadoop-3.3.6 winutils Github](https://github.com/cdarlint/winutils/tree/master/hadoop-3.3.6/bin) and copy them into `hadoop-3.3.6\bin` directory (replace files if already available).
+Since we installed `hadoop-3.3.6` version, download windows utilities for Hadoop 3.3.6 version from [hadoop-3.3.6 winutils Github](https://github.com/cdarlint/winutils/tree/master/hadoop-3.3.6/bin) and copy them into `hadoop-3.3.6\bin` directory (replace files if already available).  
 <br/>
 
-## Set up Environment Variables:
-After installing pre-requisites and Hadoop, we should configure the environment variables defining Hadoop and Java default paths.
-1. In the Windows search bar, start typing “environment variables” and select the first match which opens up **System Properties** dialog.
-
-2. On the **System Properties** window, press **Environment Variables** button to setup up two environment variables as described below:
+## 3. Set up Environment Variables:
+After installing pre-requisites and Hadoop, we should configure the below environment variables defining Hadoop and Java installation paths.  
    * `JAVA_HOME`: This is the JDK installation directory path in the machine (in our case, it is `D:\ProgramFiles\Java\jdk-1.8`). Ignore it if this is already done.
    * `HADOOP_HOME`: This is the Hadoop installation directory path in the machine (in our case, it is `D:\ProgramFiles\Hadoop\hadoop-3.3.6`)
 
-    These variables need to be added to either **User environment variables** or **System environment variables** depending on Hadoop configuration needed **for a single user** or **for multiple users**.
+These variables need to be added to either **User environment variables** or **System environment variables** depending on Hadoop configuration needed **for a single user** or **for multiple users**.
 
-    Here, we will add **User environment variables** since we are configuring Hadoop for a single user. If you would like to configure Hadoop for multiple users, then define System environment variables.
+In this tutorial, we will add **User environment variables** since we are configuring Hadoop for a single user. If you would like to configure Hadoop for multiple users, then define System environment variables.  
+<br/>
 
-3. In the **Environment Variables** dialog:
-   * Click on New under User variables section. Add variable name `JAVA_HOME` and value `D:\ProgramFiles\Java\jdk-1.8` _(the path where your JDK or JRE was installed)_. Then, press OK.
-   * Click on New again under User variables. Add variable name `HADOOP_HOME` variable and value `D:\ProgramFiles\Hadoop\hadoop-3.3.6` _(the path where your Hadoop was installed)_. Then, press OK.
-   * Select **Path** variable under User variables and press Edit button. Press New and add `%JAVA_HOME%\bin` and `%HADOOP_HOME%\bin` values and press OK.
+1. In the Windows search bar, start typing “environment variables” and select the first match which opens up **System Properties** dialog.
+
+2. On the **System Properties** window, press **Environment Variables** button to setup up two environment variables as described below:
+
+3. On the **Environment Variables** dialog:
+   * Click on New under **User variables** section. Add variable name `JAVA_HOME` and value `D:\ProgramFiles\Java\jdk-1.8` _(the path where your JDK or JRE was installed)_. Then, press OK.
+   * Click on New again. Add variable name `HADOOP_HOME` variable and value `D:\ProgramFiles\Hadoop\hadoop-3.3.6` _(the path where your Hadoop was installed)_. Then, press OK.
+   * Select **Path** variable and press Edit button. Press New and add `%JAVA_HOME%\bin` and `%HADOOP_HOME%\bin` values and press OK.
    * Press OK to apply environment variable changes and close window.
 <br/>
 
-## Verify Hadoop Installation:
-Open Windows PowerShell or Command Prompt and verify if Hadoop is installed properly by running the following command:
+## 4. Verify Hadoop Installation:
+Open Windows PowerShell or Command Prompt and run this command to verify if Hadoop is installed properly:
 ```
 hadoop version
 ```
@@ -64,8 +67,8 @@ It should display the version of Hadoop i.e **Hadoop 3.3.6** installed in the ma
 <br/>
 <br/>
 
-## Configure Hadoop Cluster:
-After Hadoop has been installed, we need to modify the following four files to configure the Hadoop cluster: 
+## 5. Configure Hadoop Cluster:
+After Hadoop has been installed, we need to modify the following four files to configure the Hadoop cluster:  
 `HADOOP_HOME\etc\hadoop\hdfs-site.xml`  
 `HADOOP_HOME\etc\hadoop\core-site.xml`  
 `HADOOP_HOME\etc\hadoop\mapred-site.xml`  
@@ -75,7 +78,12 @@ After Hadoop has been installed, we need to modify the following four files to c
 **HDFS Site Configuration:**  
 Since Hadoop is built on Master-Slave architecture, we should first create a directory to store all master (Namenode) data and another directory to store other data (Datanode) before modifying HDFS configuraiton file.
 
-Go to `D:\ProgramFiles\Hadoop\hadoop-3.3.6` location (where Hadoop was installed and HADOOP_HOME variable is set to) and create a `data` folder in which create `dfs` folder. Inside `dfs` folder, create `namenode` and `datanode` sub-folders. After creating these folders, the directory structure should look like below:  
+Go to `D:\ProgramFiles\Hadoop\hadoop-3.3.6` location _(where Hadoop was installed and HADOOP_HOME variable is set to)_ :
+* Create a `data` folder.
+* Inside `data` folder, create `dfs` folder.
+* Inside `dfs` folder, create `namenode` and `datanode` sub-folders.  
+
+After creating these folders, the directory structure should look like below:  
 `D:\ProgramFiles\Hadoop\hadoop-3.3.6\data\dfs\namenode`  
 `D:\ProgramFiles\Hadoop\hadoop-3.3.6\data\dfs\datanode`  
 
@@ -134,7 +142,7 @@ To configure the YARN site, open `yarn-site.xml` file located in `HADOOP_HOME\et
 ```
 <br/>
 
-## Format NameNode:
+## 6. Format NameNode:
 Next, we should configure the NameNode to bring the above configuration changes into effect. 
 
 Open Windows PowerShell in Administrator mode and execute this command:
@@ -145,7 +153,7 @@ It shows us a message "**Storage directory has been successfully formatted**".
 <br/>
 <br/>
 
-## Start Hadoop Services:
+## 7. Start Hadoop Services:
 Now, we should be able to start Hadoop services.  
 Open Windows PowerShell or Command Prompt as Administrator and execute these commands.
 
@@ -186,7 +194,7 @@ Jps
 ```
 <br/>
 
-## Run HDFS Commands
+## 8. Run HDFS Commands
 Let us run a few hdfs commands to verify if they are working without any issue.
 <br/>
 <br/>
@@ -226,14 +234,14 @@ Similarly, we can run any other HDFS commands here.
 <br/>
 <br/>
 
-## Hadoop Web UI:
+## 9. Hadoop Web UI:
 Hadoop provides three web interfaces that can be used for monitoring NameNode, DataNode and YARN resources.
 * NameNode UI: http://localhost:9870/dfshealth.html
 * DataNode UI: http://localhost:9864/datanode.html
 * YARN UI: http://localhost:8088/cluster
 <br/>
 
-## MapReduce Examples:
+## 10. MapReduce Examples:
 Hadoop MapReduce is a software framework built for writing applications to process huge amounts of data (multi-terabyte data-sets) in-parallel on large clusters (thousands of nodes) of commodity hardware in a reliable, fault-tolerant manner. 
 
 Hadoop 3.3.6 version provides in-built MapReduce example programs such as `wordcount`, `wordmean`, `aggregatewordcount`, `sudoku`, `sort`, etc. that can be executed on Hadoop cluster. These programs are packaged under `hadoop-mapreduce-examples-3.3.6.jar` file located at `HADOOP_HOME\share\hadoop\mapreduce` directory.
