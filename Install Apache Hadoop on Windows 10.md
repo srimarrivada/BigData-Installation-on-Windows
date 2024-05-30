@@ -5,7 +5,7 @@ Hadoop ecosystem consists of **HDFS** (Hadoop Distributed File System), **Resour
 The core components of Hadoop include **NameNode**, **DataNode**, **ResourceManager** (including Scheduler and ApplicationManager), **NodeManager** and ApplicationMaster.
 
 Follow these steps to install Apache Hadoop 3.3.6 release on Windows 10 operating system. 
-You can also go through [this PDF document](doc/Install%20Apache%20Hadoop%20on%20Windows%2010.pdf) for installation steps along with screenshots.
+You can also go through [this PDF document](/doc/Install%20Apache%20Hadoop%203.3.6%20on%20Windows%2010.pdf) for installation steps along with screenshots.
 <br/>
 <br/>
 ## 1. Prerequisites:
