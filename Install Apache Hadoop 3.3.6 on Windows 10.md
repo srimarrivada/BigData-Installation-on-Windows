@@ -54,7 +54,7 @@ In this tutorial, we will add **User environment variables** since we are config
 3. On the **Environment Variables** dialog:
    * Click on New under **User variables** section. Add variable name `JAVA_HOME` and value `D:\ProgramFiles\Java\jdk-1.8` _(the path where your JDK or JRE was installed)_. Then, press OK.
    * Click on New again. Add variable name `HADOOP_HOME` variable and value `D:\ProgramFiles\Hadoop\hadoop-3.3.6` _(the path where your Hadoop was installed)_. Then, press OK.
-   * Select **Path** variable and press Edit button. Press New and add `%JAVA_HOME%\bin` and `%HADOOP_HOME%\bin` values and press OK.
+   * Select **Path** variable and press Edit button. Press New and add `%JAVA_HOME%\bin`,  `%HADOOP_HOME%\bin`, `%HADOOP_HOME%\sbin` values and press OK.
    * Press OK to apply environment variable changes and close window.
 <br/>
 
@@ -107,7 +107,6 @@ Next, open `hdfs-site.xml` file located in `HADOOP_HOME\etc\hadoop` directory, a
 	<description>Data node directory</description>
   </property>
 ```
-<br/>
 
 ### Core Site Configuration:  
 To configure the NameNode URL, open `core-site.xml` file located in `HADOOP_HOME\etc\hadoop` directory, and add the following properties within the `<configuration></configuration>` element:
@@ -118,7 +117,6 @@ To configure the NameNode URL, open `core-site.xml` file located in `HADOOP_HOME
 	<description>HDFS NameNode URL</description>
   </property>
 ```
-<br>
 
 ### MapReduce Site Configuration:  
 To configure the MapReduce framework, open `mapred-site.xml` file located in `HADOOP_HOME\etc\hadoop` directory, and add the following properties within the `<configuration></configuration>` element:
@@ -129,7 +127,6 @@ To configure the MapReduce framework, open `mapred-site.xml` file located in `HA
 	<description>MapReduce framework name</description>
   </property>
 ```
-<br>
 
 ### YARN Site Configuration:  
 To configure the YARN site, open `yarn-site.xml` file located in `HADOOP_HOME\etc\hadoop` directory, and add the following XML code within the `<configuration></configuration>` element:
@@ -160,31 +157,24 @@ Open Windows PowerShell or Command Prompt as Administrator and execute these com
 ### Start Hadoop Nodes:  
 
 ```
-cd D:\ProgramFiles\Hadoop\hadoop-3.3.6\sbin 
-.\start-dfs.cmd
+start-dfs.cmd
 ```
 After executing the above command, it opens up two command prompt windows - one for `namenode` and other for `datanode`. </br> 
 Wait until `namenode` service says "**Quota initialization completed**" and `datanode` service says "**Successfully sent block report to namenode: localhost/127.0.0.1:9820**".
-<br>
-<br>
 
 ### Start Hadoop YARN:  
 
 ```
-cd D:\ProgramFiles\Hadoop\hadoop-3.3.6\sbin 
-.\start-yarn.cmd
+start-yarn.cmd
 ```
 After executing the above command, it opens up two command prompt windows - one for `resourcemanager`   and other for `nodemanager`. </br>
 Wait until `resourcemanager` service says "**Transitioned to active state**" and `nodemanager` service says "**Registered with ResourceManager**".
-<br>
-<br>
 
 _**Note:**_
-You can start all the above 4 services using a single command as below
+You can start all the above 4 services - `namenode`, `datanode`, `resourcemanager`, `nodemanger` - together with this command:
 ```
 start-all.cmd
 ```
-<br/>
 
 ### Verify Services:  
 Now, run the following command to make sure all services are started successfully
@@ -207,7 +197,7 @@ Let us run a few hdfs commands to verify if they are working without any issue.
 <br/>
 
 **Verify File System:**  
-Check the status of Hadoop file system by running this command.
+Check the status of Hadoop file system using this command.
 ```
 hdfs fsck /
 ```
@@ -218,11 +208,19 @@ Run this command to list all contents of the root directory `/`
 ```
 hadoop fs -ls /
 ```
+or
+```
+hdfs dfs -ls /
+```
 
 **Create Directory:**  
 Run this command to create a directory named `user` under root directory `/`
 ```
 hadoop fs -mkdir /user
+```
+or
+```
+hdfs dfs -mkdir /user
 ```
 
 **Copy File:**  
@@ -230,14 +228,22 @@ Run this command to copy a file named `sample_file.txt` into HDFS at `/user` pat
 ```
 hadoop fs -copyFromLocal sample_file.txt /user
 ```
+or
+```
+hdfs dfs -copyFromLocal sample_file.txt /user
+```
 
 **Remove File:**  
 Remove the file named `sample_file.txt` into HDFS at `/user` path from HDFS using this command 
 ```
 hadoop fs -rm /user/sample_file.txt
 ```
+or
+```
+hdfs dfs -rm /user/<file_name>
+```
 
-Similarly, we can run any other HDFS commands here.
+Similarly, we can execute any other HDFS commands on our cluster.
 <br/>
 <br/>
 
@@ -276,7 +282,7 @@ hadoop fs -cat /output/wordcount/part-r-00000
 ```
 We can see that the program has generated the output file `part-r-00000` in HDFS under `/output/wordcount/` directory and the file contains count of each words from the input file.
 
-### Review NameNode UI:  
+### View in NameNode UI:  
 The above output is visible in NameNode UI http://localhost:9870/dfshealth.html as well. 
 
 Open NameNode UI:
@@ -284,9 +290,10 @@ Open NameNode UI:
 * Click on `output` folder inside `/` folder.
 * Then, click on `wordcount` folder.
 * Then, click on `part-r-00000` file. Here, we can see the file information such as Block Id, Block Pool ID, Generation stamp etc.
-* Click on **Head the file** tab where we can see the first few lines in the `part-r-00000` file. We can also **Download** this file into our local system.
+* Click on **Head the file** tab to see the first few lines or **Tail the file** tab to see the last few lines in the `part-r-00000` file.
+* Click on **Download** tab to download this file into your local system.
 
-### Review Job Details in YARN UI:  
+### View Job Details in YARN UI:  
 The above `wordcount` program job details can be seen in YARN UI http://localhost:8088/cluster:
 
 Open YARN UI:
@@ -298,23 +305,22 @@ Open YARN UI:
 Open **Windows PowerShell** or **Command Prompt** as **Administrator** and stop services.
 
 ### Stop Hadoop Nodes:  
-Use the following command to stop the Hadoop nodes:
 ```
 stop-dfs.cmd
 ```
 
-After executing the above command, it automatically closes two command prompt windows that were opened earlier for the namenode and datanode daemons.  
+After executing the above command, it automatically closes two command prompt windows that were opened earlier for the `namenode` and `datanode` daemons.  
 
 ### Stop Hadoop YARN:  
-Use the following command to stop Hadoop YARN services:
 ```
 stop-yarn.cmd
 ```
 
-After executing the above command, it automatically closes two command prompt windows that were opened earlier for the resourcemanager and nodemanager daemons.  
+After executing the above command, it automatically closes two command prompt windows that were opened earlier for the `resourcemanager` and `nodemanager` daemons.  
+<br/>
 
 _**Note:**_
-You can stop all the above 4 services using a single command as below:  
+You can stop all the above 4 services - `namenode`, `datanode`, `resourcemanager`, `nodemanger` - together with this command:
 ```
 stop-all.cmd
 ```
