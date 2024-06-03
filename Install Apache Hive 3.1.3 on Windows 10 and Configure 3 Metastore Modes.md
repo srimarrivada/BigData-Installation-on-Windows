@@ -10,14 +10,14 @@ The key components of Apache Hive include **Hive CLI**, **Beeline CLI**, **HiveS
 and this schema repository can be used by other data processing tools such as Spark, Pig etc.
 
 **Hive Metastore** works in three different modes:
-1.	**Embedded Metastore:** In this mode, Hive Metastore service runs in the same JVM where Hive Driver service runs and it uses Apache Derby as metastore database that is stored on the local file system.
+1. **Embedded Metastore:** In this mode, Hive Metastore service runs in the same JVM where Hive Driver service runs and it uses Apache Derby as metastore database that is stored on the local file system.
 This is the default metastore that comes with Hive installation and is used for testing purposes only. Only one embedded Derby database can access database files at any time so only one Hive session
 can be opened and if we try to start the second Hive session, it errors out. To allow multiple Hive sessions, we can configure Derby to run as Network Server.
 
-2.	**Local Metastore:** In this mode, Hive Metastore and Hive Driver still run within the same JVM process but metastore service connects to a JDBC supported database such as Derby, MySQL etc that runs
+2. **Local Metastore:** In this mode, Hive Metastore and Hive Driver still run within the same JVM process but metastore service connects to a JDBC supported database such as Derby, MySQL etc that runs
 on a different JVM in the same machine or on different machine. Local metastore currently supports **Derby**, **MySQL**, **MSSQL**, **Oracle** and **Postgres**  database systems only.
 
-3.	**Remote Metastore:** In this mode, Hive Metastore service runs in a different JVM but not in Hive Driver service JVM and metastore service connects to a remote database which could be **MySQL**, **MSSQL**,
+3. **Remote Metastore:** In this mode, Hive Metastore service runs in a different JVM but not in Hive Driver service JVM and metastore service connects to a remote database which could be **MySQL**, **MSSQL**,
 **Oracle** or **Postgres**. In Remote Metastore, Hive Client makes a connection to Hive Metastore using Thrift protocol, and Metastore server in turn communicates with the database and run queries.
 
 This document provides instructions to install **Hive 3.1.3** version on top of **Hadoop 3.x** and configure Hive metastore in all 3 modes.
@@ -26,24 +26,25 @@ You can also go through [this PDF document](/doc/Install%20Apache%20Hive%203.1.3
 
 ## 1. Prerequisites
 The following prerequisites need to be installed before running Hive.
-1.	**Hadoop:** Before installing Hive, Hadoop cluster must have been installed and running. 
-Go through [these steps](https://github.com/srimarrivada/BigData-Installation-on-Windows/blob/main/Install%20Apache%20Hadoop%203.3.6%20on%20Windows%2010.md) to install Hadoop on Windows operating system.
+1. **Hadoop:** Before installing Hive, Hadoop cluster must have been installed and running. 
+   Go through [these steps](https://github.com/srimarrivada/BigData-Installation-on-Windows/blob/main/Install%20Apache%20Hadoop%203.3.6%20on%20Windows%2010.md) to 
+   install Hadoop on Windows operating system.
 
-2.	**File Archiver:** Any file archiver such as **7zip** or **WinRAR** is needed to unzip the downloaded Hive binaries.  
-    7zip can be downloaded from the [official 7zip Downloads](https://www.7-zip.org/download.html) website
-  	and WinRAR can be downloaded from the [official RAR lab Downloads](https://www.rarlab.com/download.htm) website.
+2. **File Archiver:** Any file archiver such as **7zip** or **WinRAR** is needed to unzip the downloaded Hive binaries.  
+   7zip can be downloaded from the [official 7zip Downloads](https://www.7-zip.org/download.html) website
+   and WinRAR can be downloaded from the [official RAR lab Downloads](https://www.rarlab.com/download.htm) website.
 
-3.	**Cygwin:** Since some Hive utilities are not compatible with Windows, we will need the Cygwin tool to run Linux commands.
-    You can go through [these steps](https://github.com/srimarrivada/CygwinInstallation/blob/main/Use%20Cygwin%20to%20Run%20Linux%20Commands%20on%20Windows.md) to install Cygwin.
+4. **Cygwin:** Since some Hive utilities are not compatible with Windows, we will need the Cygwin tool to run Linux commands.
+    You can go through [these steps](https://github.com/srimarrivada/CygwinInstallation/blob/main/Use%20Cygwin%20to%20Run%20Linux%20Commands%20on%20Windows.md) to 
+    install Cygwin.
 <br/>
 
 ## 2. Download Hive Binaries
 After installing prerequisites, download  **Hive 3.1.3** release from the [Apache Hive Downloads](https://www.apache.org/dyn/closer.cgi/hive/) mirror website.
-1. Go to the [suggested location](https://dlcdn.apache.org/hive/) for download and click on [hive-3.1.3/](https://dlcdn.apache.org/hive/hive-3.1.3/) from where you need to download the binary file
-   named `apache-hive-3.1.3-bin.tar.gz` which gets downloaded to your **Downloads** folder.
+1. Go to the [suggested location](https://dlcdn.apache.org/hive/) for download and click on [hive-3.1.3/](https://dlcdn.apache.org/hive/hive-3.1.3/) from where 
+   you need to download the binary file named `apache-hive-3.1.3-bin.tar.gz` which gets downloaded to your **Downloads** folder.
 
 2. After the binary file is downloaded, unpack it using any file archiver (**7zip** or **WinRAR**) utility as below:
-
    * Choose the installation directory in your machine and copy `apache-hive-3.1.3-bin.tar.gz` file to that directory.  
      Here, we are choosing Hive installation directory as `D:\ProgramFiles\Hive`.
 
@@ -157,8 +158,7 @@ Open Hive CLI and run the following queries to create a hive metadata database, 
   create database hive_embedded_derby_db;
   show databases;
   ```
-  As soon as the above query is executed, Hive creates the default warehouse directory `/user/hive/warehouse` in which `hive_embedded_derby_db.db` folder is created 
-  in Hadoop File System that you can validate with this command:
+  As soon as the above query is executed, Hive creates the default warehouse directory `/user/hive/warehouse` in which `hive_embedded_derby_db.db` folder is created in Hadoop File System that you can validate with this command:
   ```
   hadoop fs -ls /user/hive/warehouse
   ```
@@ -560,6 +560,11 @@ Open `hive-site.xml` file in `HIVE_HOME\conf` directory and replace the existing
 	<name>hive.metastore.uris</name>
 	<value>thrift://127.0.0.1:9083</value>
 	<description>Thrift URI for the remote metastore. Used by metastore client to connect to remote metastore</description>
+  </property>
+  <property> 
+	<name>hive.server2.enable.doAs</name> 
+	<value>false</value> 
+	<description>Enable user impersonation for HiveServer2</description>
   </property>
 ```
 
