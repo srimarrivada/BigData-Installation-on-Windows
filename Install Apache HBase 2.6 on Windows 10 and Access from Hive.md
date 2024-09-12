@@ -18,9 +18,13 @@ HBase can be installed in three different modes:
 
 This document provides instructions to install **Standalone cluster** of **Apache HBase 2.6** on Windows and access it from Hive.  
 You can also go through [this PDF document](/doc/Install%20Apache%20HBase%202.6%20on%20Windows%2010.pdf) for installation steps along with screenshots.  
+
+**<ins> Note: </ins>** 
+**HBase 2.x version does not support installing Pseudo Distributed mode in Windows Operating System.**
+<br/>
 <br/>
 
-## 1.	Prerequisites:
+## 1. Prerequisites:
 The following prerequisites need to be installed before running HBase.
 1. **File Archiver:** Any file archiver such as **7zip** or **WinRAR** is needed to unzip the downloaded HBase binaries.  
    7zip can be downloaded from the [official 7zip Downloads](https://www.7-zip.org/download.html) website
@@ -243,9 +247,6 @@ To resolve this error, follow the below steps:
   hbase shell
   ```
   Use `quit` or `exit` command  to come out of HBase interactive shell.
-
-**<ins> Note: </ins>** 
-**HBase 2.x version does not support installing Pseudo Distributed mode of HBase in Windows Operating System.**
 <br/>
 <br/>
 
