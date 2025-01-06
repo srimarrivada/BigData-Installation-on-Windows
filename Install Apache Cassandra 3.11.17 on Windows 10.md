@@ -10,7 +10,7 @@ The key components of Cassandra include **Node**, **Data Center**, **Cluster**, 
 **Note:**  
 The latest release of Apache Cassandra from 4.0+ does not support the direct installation on Windows operating system. If you would like to use Apache Cassandra 4.0+ version, then go with Docker image or install it on Linux operating system.
 
-This document provides instructions to install **Apache Cassandra 3.11.9** with single-node and multi-node cluster configuration on Windows Operating system. 
+This document provides instructions to install **Apache Cassandra 3.11.17** with single-node and multi-node cluster configuration on Windows Operating system. 
 You can also go through [this PDF document](/doc/Install%20Apache%20Cassandra%203.11.17%20on%20Windows%2010.pdf) for installation steps along with screenshots.  
 <br/>
 
@@ -19,8 +19,7 @@ The following prerequisites need to be installed before running Cassandra.
 1. **File Archiver:** Any file archiver such as **7zip** or **WinRAR** is needed to unzip the downloaded Spark binaries.  
    **7zip** can be downloaded from the [official 7zip Downloads](https://www.7-zip.org/download.html) website where as **WinRAR** can be downloaded from the [official RAR lab Downloads](https://www.rarlab.com/download.htm) website.
 
-2. **JRE 8:** Cassandra 3.11 requires Java 8 runtime environment supporting up to JDK 1.8_251 release. You can download the **JDK 8u251** release from [Oracle Java Archive Downloads](https://www.oracle.com/java/technologies/javase/javase8u211-later-archive-downloads.html) website.  
-   For the complete JDK installation steps, look at [here](https://github.com/srimarrivada/JDK-Installation/blob/main/Install%20JDK8%20on%20Windows.md).
+2. **JRE 8:** Cassandra 3.11 requires Java 8 runtime environment supporting up to JDK 1.8_251 release. You can download the **JDK 8u251** release from [Oracle Java Archive Downloads](https://www.oracle.com/java/technologies/javase/javase8u211-later-archive-downloads.html) website. For the complete JDK installation steps, look at [here](https://github.com/srimarrivada/JDK-Installation/blob/main/Install%20JDK8%20on%20Windows.md).  
    Verify the installed Java version using the below command:
    ```
    java -version
@@ -41,8 +40,8 @@ Let us see the step by step procedure to install Apache Cassandra in Windows.
 You can get the stable release from the official [Apache Cassandra Downloads](https://cassandra.apache.org/_/download.html) website. At the time of this document preparation, the most recent stable release is **4.1.7** which cannot be used on Windows system directly. Instead, we will install **3.11.17** release. 
 * Go to [Cassandra Archive location](https://archive.apache.org/dist/cassandra/) website.
 * On the [Cassandra Archive 3.11.17](https://archive.apache.org/dist/cassandra/3.11.17/) page, click on [apache-cassandra-3.11.17-bin.tar.gz](https://archive.apache.org/dist/cassandra/3.11.17/apache-cassandra-3.11.17-bin.tar.gz) link which downloads the file into your **Downloads** folder in your machine.  
-* After the binary file is downloaded, choose the installation directory in your machine and copy `apache-cassandra-3.11.17-bin.tar.gz` file to that directory. Let us choose the installation directory as
-  `D:\ProgramFiles\Cassandra`.
+* After the binary file is downloaded, choose the installation directory in your machine and copy `apache-cassandra-3.11.17-bin.tar.gz` file to that directory _(Here I have chosen my installation directory as
+  `D:\ProgramFiles\Cassandra`)_
 * Right click on `apache-cassandra-3.11.17-bin.tar.gz` file and choose **7-Zip** -> **Extract Here** option which extracts a new packed file `apache-cassandra-3.11.17-bin.tar`.
 * Next, unpack `apache-cassandra-3.11.17-bin.tar` file using **7zip** utility.
 * The tar file extraction may take few minutes to finish. After finishing, you see a folder named `apache-cassandra-3.11.17-bin` which consists of Cassandra binaries and libraries.
@@ -108,13 +107,13 @@ The key configuration files used in Cassandra are available under `%CASSANDRA_HO
 Though we are using Cassandra with single node, let us see how some configuration changes can be made for cluster setup.
 
 Open `cassandra.yml` from `%CASSANDRA_HOME%\conf` directory and set the following properties:  
-* `cluster_name`: Name of the cluster. By default, it is set to Test Cluster. You can change it to the desired name, for instance, CassandraDBCluster. Make sure that all nodes in the cluster use the same cluster_name.
-* `num_tokens`: Number of tokens. By default, this is set to 256. Any value greater than 1 is treated as virtual node so that token distribution will happen automatically.
-* `listen_address`: IP address or hostname of the current node to be used by other nodes to connect to this node. By default, it is set to localhost but you can change it to the internal IP address of the node.
-* `rpc_address`: Internal IP address for thrift client connections. By default, it is set to localhost but you can change it to the internal IP address of the node.
-* `seed_provider`: List of internal IP addresses of hosts that are deemed contact points. In the config file of every node, we should specify the IP address of seed nodes. By default, it is set to "127.0.0.1" and should be updated with internal IP addresses of all hosts in the cluster.
-* `endpoint_snitch`: It gives some information about network topology so that Cassandra can efficiently route requests. By default, it is set to SimpleSnatch class which is appropriate for cluster setup with single datacenter. For multi-data center deployments, it is recommended to use GossipingPropertyFileSnitch with which rack and datacenter for the local node are specified in Cassandra-rackdc.properties and propagated to other nodes via gossip. Cassandra supports other types of snitches such as PropertyFileSnitch, Ec2Snitch, Ec2MultiRegionSnitch, RackInferringSnitch, etc.
-* `auto_bootstrap`: This configuration is not available in the file and can be added and set to false. This configuration is optional if nodes are added to existing cluster but required when creating a new cluster with no data.  
+* `cluster_name`: Name of the cluster. By default, it is set to `Test Cluster`. You can change it to the desired name, for instance, `CassandraDBCluster`. Make sure that all nodes in the cluster use the same cluster_name.
+* `num_tokens`: Number of tokens. By default, this is set to `256`. Any value greater than 1 is treated as virtual node so that token distribution will happen automatically.
+* `listen_address`: IP address or hostname of the current node to be used by other nodes to connect to this node. By default, it is set to `localhost` but you can change it to the internal IP address of the node.
+* `rpc_address`: Internal IP address for thrift client connections. By default, it is set to `localhost` but you can change it to the internal IP address of the node.
+* `seed_provider`: List of internal IP addresses of hosts that are deemed contact points. In the config file of every node, we should specify the IP address of seed nodes. By default, it is set to `127.0.0.1` and should be updated with internal IP addresses of all hosts in the cluster.
+* `endpoint_snitch`: It gives some information about network topology so that Cassandra can efficiently route requests. By default, it is set to `SimpleSnatch` class which is appropriate for cluster setup with single datacenter. For multi-data center deployments, it is recommended to use `GossipingPropertyFileSnitch` with which rack and datacenter for the local node are specified in `Cassandra-rackdc.properties` file and propagated to other nodes via gossip. Cassandra supports other types of snitches such as `PropertyFileSnitch`, `Ec2Snitch`, `Ec2MultiRegionSnitch`, `RackInferringSnitch`, etc.
+* `auto_bootstrap`: This configuration is not available in the file and can be added and set to `false`. This configuration is optional if nodes are added to existing cluster but required when creating a new cluster with no data.  
 
 Locate the above settings in `cassandra.yml` file and modify as below:
 ```
@@ -164,7 +163,7 @@ nodetool status
 ```
 Here, you can see the process status, listening address, tokens, host ID, data center and rack name of the current node.
 
-Check the token distribution of the node using the following command
+Check the token distribution of the node using the following command:
 ```
 nodetool ring
 ```
@@ -174,8 +173,10 @@ nodetool ring
 For the purpose of this documentation, we will create a second Cassandra node in the same system with a different address but in the real-time project, we should configure one node per system in a Cassandra cluster.
 
 ### 5.1. Extract Cassandra Binaries:
-To set up a new Cassandra node, create a new folder where a new instance of Cassandra can be installed. In my case, I created `node2` folder under `D:\ProgramFiles\Cassandra` location.
-Copy the Cassandra binary file `apache-cassandra-3.11.17-bin.tar.gz` to the new folder and extract contents of it. 
+Follow below steps to set up a new Cassandra node:
+* Create a new folder where a new instance of Cassandra can be installed _(In my case, I created `node2` folder under `D:\ProgramFiles\Cassandra` location)_.
+* Copy the Cassandra binary file `apache-cassandra-3.11.17-bin.tar.gz` to the new folder.
+* Extract contents of binary file using 7-Zip or WinSCP in the new folder created above. 
 
 ### 5.2. Modify Configuration Files:
 We should update the following files in the new Cassandra install location to configure the second node.  
@@ -251,7 +252,7 @@ Cassandra provides an interactive tool called **Cassandra Query Language Shell**
 
 While using `cqlsh`, we can specify the IP address and port to connect to a specific Cassandra node with specific username and password. We can use the default user `cassandra` and password `cassandra` to connect to database.
 
-Open **Command Prompt** and run the following commands to launch CQLSH tool connecting to second node in our system
+Open **Command Prompt** and run the following commands to launch CQLSH tool connecting to second node in our system:
 ```
 cd D:\ProgramFiles\Cassandra\apache-cassandra-3.11.17\bin
 cqlsh 127.0.0.2 9042
@@ -262,35 +263,35 @@ cd D:\ProgramFiles\Cassandra\apache-cassandra-3.11.17\bin
 cqlsh 127.0.0.2 9042 -u cassandra -p cassandra
 ```
 
-You can see that it is connected to **CassandraDBCluster** at node address **127.0.0.2:9042**
+You will see that it is connected to **CassandraDBCluster** at node address **127.0.0.2:9042**.
 
 On `cqlsh>` prompt, use `HELP` command that lists out all possible commands that can be triggered to interact with Cassandra.
 
 To get more help on each command, use `HELP` followed by a command name. For example, to know more details about `SHOW` command, run `HELP SHOW`.
 
-### 6.1. Describe Cluster:
+**Describe Cluster:**  
 Use the below CQLSH command to see the information about the connected Cassandra cluster, such as the cluster name, and the partitioner and snitch in use. When you are connected to a non-system keyspace, also shows endpoint-range ownership information for the Cassandra ring.
 ```
 DESCRIBE CLUSTER
 ```
 
-### 6.2. View Version:
+**View Version:**  
 Use the below CQLSH command to see the version and build of the connected Cassandra instance:
 ```
 SHOW VERSION
 ```
 
-Here, you can see that the **cqlsh 5.0.1** and **Cassandra 3.11.17** versions that was installed.
+You can see that **cqlsh 5.0.1** and **Cassandra 3.11.17** version that was installed.
 
-### 6.3. Show Host:
+**Show Host:**  
 To see where the current CQLSH session is connected, run the below command:
 ```
 SHOW HOST
 ```
 
-Here, you can see that the current CQLSH instance is connected to **CassaandraDBCluster**.
+You can see that the current CQLSH instance is connected to **CassaandraDBCluster**.
 
-### 6.4. Create Keyspace:
+**Create Keyspace:**  
 A keyspace in Cassandra is like database in RDBMS and contains column families, indexes, user defined types, data center awareness, strategy used in keyspace, replication factor, etc.
 
 Let us create a new keyspace named `testspace` with replication factor 2 using the below command:
@@ -314,7 +315,7 @@ The `use` command in Cassandra sets the current working keyspace. Run the follow
 USE testspace;
 ```
  
-### 6.5. Create Table:
+**Create Table:**  
 In Cassandra, `CREATE TABLE` command is used to create a table with column families to store data just like table in RDBMS. This command expects the table name, column name, data type and a primary key. The datatypes in Cassandra can be `text`, `int`, `date`, `decimal`, `double`, `float`, `set`, `list`, `map`, etc.
 
 Use this command to create a table named `student`:
@@ -332,7 +333,7 @@ Use `describe` command to verify if the table was created or not:
 DESCRIBE TABLES;
 ```
 
-### 6.6. Insert Data:
+**Insert Data:**  
 The `INSERT` command is used to insert data into table columns.
 
 Run the following commands to insert some data into `student` table:
@@ -345,14 +346,14 @@ INSERT INTO student (student_id, student_name, student_city, student_fees)
 VALUES (3, 'Kranthi', 'Chennai', 4000);
 ```
 
-### 6.7. Read Data:
+**Read Data:**  
 Use `SELECT` command to read data from the table.
 ```
 SELECT * FROM student;
 SELECT * FROM student WHERE student_id=2;
 ```
 
-### 6.8. Batch Queries:
+**Batch Queries:**  
 In Cassandra, the `BATCH` command is used to execute multiple DML statements such as `insert`, `update`, `delete`, etc. simultaneously. It is very useful when you have to update some column as well as delete some of the existing data.
 
 Run the following batch operations to insert a new record, update the existing record and delete a column data.
@@ -371,7 +372,7 @@ SELECT * FROM student;
 
 Use `exit;` command to exit out of cqlsh.
 
-### 6.9. Data Replication:
+**Data Replication:**  
 Now, let us connect to the first node instance to verify if the data is replicated.
 ```
 cd D:\ProgramFiles\Cassandra\apache-cassandra-3.11.17\bin
@@ -387,7 +388,7 @@ SELECT * FROM student;
 ```
 
 ## 7. NodeTool Utility:
-Cassandra provides a `nodetool` utility which is a command line interface for monitoring Cassandra cluster and performing routine database operations. This utility is commonly used to output a quick summary of the ring and its current state of general health with the status command.
+Cassandra provides a `nodetool` utility which is a command line interface for monitoring Cassandra cluster and performing routine database operations. This utility is commonly used to output a quick summary of the ring and its current state of general health with `status` command.
 
 The `nodetool` utility provides commands for decommissioning a node, running repair, and moving partitioning tokens and for viewing detailed metrics for tables, server metrics, and compaction statistics, etc. 
 
@@ -400,7 +401,7 @@ If a username and password for RMI authentication are set explicitly in the `cas
 nodetool -h HOSTNAME -p JMX_PORT -u JMX_USERNAME -pw JMX_PASSWORD COMMAND
 ```
 
-Open **Command Prompt** and run the following commands to get node status connecting to pri node in our system:
+Open **Command Prompt** and run the following commands to get node status connecting to primary node in our system:
 ```
 cd D:\ProgramFiles\Cassandra\apache-cassandra-3.11.17\bin
 nodetool -h 127.0.0.1 -p 7199 -u cassandra -pw cassandra status
@@ -413,78 +414,78 @@ nodetool -h 127.0.0.1 -p 7299 -u cassandra -pw cassandra status
 
 Some of the generally used commands are described below for your understanding.
 
-### 7.1. Nodetool help:
-This is a basic command which lists all the available nodetool commands. This command is useful to learn about the available commands.
+**nodetool help:**  
+`nodetool help` is a basic command which lists all the available nodetool commands and is useful to learn about the available commands.
 ```
 nodetool help
 ```
 
-### 7.2. Nodetool describecluster:
-This command provides the basic cluster information such as cluster name, endpoint-snitch being used, partitioner and schema versions.
+**nodetool describecluster:**  
+`nodetool describecluster` provides the basic cluster information such as cluster name, endpoint-snitch being used, partitioner and schema versions.
 
 Follow the below syntax to use this command:
 ```
 nodetool [options] describecluster
 ```
 
-### 7.3. Nodetool status:
-This command is useful to monitor the cluster’s health and performance. It can help detect any ongoing anomalies as well as the status of each of the nodes.
+**nodetool status:**  
+`nodetool status` is useful to monitor the cluster’s health and performance. It can help detect any ongoing anomalies as well as the status of each of the nodes.
 
 Follow the below syntax to use this command:
 ```
 nodetool <options> status ( -r | --resolve-ip ) -- <keyspace>
 ```
  
-### 7.4. Nodetool ring:
-It displays token ring information with the status of each of the ndoes. The token ring is responsible for managing the partitioning of data within the Cassandra cluster. This command is critical if a cluster is facing data consistency issues. By default, nodetool ring displays all nodes that are involved in the ring and tokens that are assigned to each one of them. Optionally, you can specify the keyspace name and table name arguments to filter the output and display information.
+**nodetool ring:**  
+`nodetool ring` displays token ring information with the status of each of the ndoes. The token ring is responsible for managing the partitioning of data within the Cassandra cluster. This command is critical if a cluster is facing data consistency issues. By default, nodetool ring displays all nodes that are involved in the ring and tokens that are assigned to each one of them. Optionally, you can specify the keyspace name and table name arguments to filter the output and display information.
 
 Follow the below syntax to use this command:
 ```
 nodetool ring [keyspace] [table]
 ```
  
-### 7.5. Nodetool gossipinfo:
-It provides the gossip protocol related statistics.
+**nodetool gossipinfo:**  
+`nodetool gossipinfo` provides the gossip protocol related statistics.
 
 Follow the below syntax to use this command:
 ```
 nodetool [options] gossipinfo
 ```
 
-### 7.6. Nodetool getlogginglevels:
-It gives logging levels defined in the database for all areas
+**nodetool getlogginglevels:**  
+`nodetool getlogginglevels` gives logging levels defined in the database for all areas.
 
 Follow the below syntax to use this command:
 ```
 nodetool [options] getlogginglevels
 ```
  
-### 7.7. Nodetool netstats:
-This command provides the network information about the host machine.
+**nodetool netstats:**  
+`nodetool netstats` provides the network information about the host machine.
 
 Follow the below syntax to use this command:
 ```
 nodetool [options] netstats
 ```
  
-### 7.8. Nodetool tablestats:
-This command provides statistics about one or more tables. The table stats are updated when SSTables change through compaction or flushing. Cassandra uses the metrics-core library to make the output more informative and easier to understand.
+**nodetool tablestats:**  
+`nodetool tablestats` provides statistics about one or more tables. The table stats are updated when SSTables change through compaction or flushing. Cassandra uses the metrics-core library to make the output more informative and easier to understand.
 
 Follow the below syntax to use this command:
 ```
 nodetool [options] tablestats
 ```
 
-### 7.9. Nodetool cleanup:
-This command that is required to remove data from nodes when a new node is added to a cluster and token ring is re-distributed. After `cleanup` it is recommended to run `compact` command.
+**nodetool cleanup:**  
+`nodetool cleanup` is required to remove data from nodes when a new node is added to a cluster and token ring is re-distributed. After `cleanup` it is recommended to run `compact` command.
 
 Follow the below syntax to use `cleanup` command:
 ```
 nodetool [connection_options] cleanup [-j num_jobs] [--] [keyspace_name table_name [table_name ...]]
 ```
 
-### 7.10. Nodetool compact:
-This command is useful to perform compaction to merge several SSTables (data files in Cassandra) and keep the resultant SSTable with the latest updated data. 
+**nodetool compact:**  
+`nodetool compact` is useful to perform compaction to merge several SSTables (data files in Cassandra) and keep the resultant SSTable with the latest updated data. 
 
 When a data update or delete operation is triggered, Cassandra does not overwrite or delete the data. In case of updates, a different timestamped version of updates is maintained and in case of deletes, the data is marked for deletion as tombstones and then the latest version of data is obtained post the merge of the SSTables. Therefore, it is important to perform compactions on a periodic basis in order to keep the cluster healthy.
  
@@ -495,24 +496,24 @@ nodetool [options] compact [(-et <end_token> | --end-token <end_token>)]
 [--user-defined] <relative_path_to_SSTable file>
 ```
 
-### 7.11. Nodetool decommission:
-It decommissions the node where this command is executed, and the data of the node is streamed to the next node in the ring. It is one of the important commands that need to be executed when the cluster needs to be scaled to ensure no data loss.
+**nodetool decommission:**  
+`nodetool decommission` decommissions the node where this command is executed, and the data of the node is streamed to the next node in the ring. It is one of the important commands that need to be executed when the cluster needs to be scaled to ensure no data loss.
 
 Follow the below syntax to use `decommission` command:
 ```
 nodetool [options] decommission
 ```
 
-### 7.12. Nodetool drain:
-It flushes all memtables (temporary tables usually on the heap) to the SSTables on disk. Once the command is executed, the node stops listening for connections from clients and other nodes. The node is marked as DS (Down/Stopped) in the cluster in the nodetool status command output. This command is usually run before any maintenance activities or when upgrading a node to a newer version of Cassandra.
+**nodetool drain:**  
+`nodetool drain` flushes all memtables (temporary tables usually on the heap) to the SSTables on disk. Once the command is executed, the node stops listening for connections from clients and other nodes. The node is marked as DS (Down/Stopped) in the cluster in the nodetool status command output. This command is usually run before any maintenance activities or when upgrading a node to a newer version of Cassandra.
 
 Follow the below syntax to use `drain` command:
 ```
 nodetool [options] drain
 ```
 
-### 7.13. Nodetool garbagecollect:
-It performs single SSTable compactions to eliminate updates or logically deleted data (Tombstones).
+**nodetool garbagecollect:**  
+`nodetool garbagecollect` performs single SSTable compactions to eliminate updates or logically deleted data (Tombstones).
 
 For each SSTable, the command creates a new SSTable with unnecessary data cleaned out.
 By default, `garbagecollect` removes rows or partitions that have been deleted or overwritten with newer data. It can also remove deleted or overwritten cell values when `-g` argument is specified. This command can eliminate expired tombstones which are older than `gc_grace_seconds`, but not fresh ones.
@@ -524,36 +525,36 @@ Follow the below syntax to use this command:
 nodetool options garbagecollect [--] keyspace_name table_name
 ```
 
-### 7.14. Nodetool join:
-It adds a new node to the cluster. When this command is executed, the new node will start to communicate with other nodes in the cluster and receive data from them. It is important to ensure that the new node has the same version of Cassandra as the existing nodes in the cluster.
+**nodetool join:**  
+`nodetool join` adds a new node to the cluster. When this command is executed, the new node will start to communicate with other nodes in the cluster and receive data from them. It is important to ensure that the new node has the same version of Cassandra as the existing nodes in the cluster.
 
 Follow the below syntax to use this command:
 ```
 nodetool <options> join
 ```
 
-### 7.15. Nodetool removenode:
-This command is useful when a node is no longer needed or when a node has failed and needs to be replaced or removed. Before removing the dead node, nodetool decommission command must be run first on the node being removed and then nodetool removenode command should be executed on the live node in the cluster.
+**nodetool removenode:**  
+`nodetool tablestats` is useful when a node is no longer needed or when a node has failed and needs to be replaced or removed. Before removing the dead node, nodetool decommission command must be run first on the node being removed and then nodetool removenode command should be executed on the live node in the cluster.
 
 When a node is removed, Cassandra redistributes the data that was stored on that node to the remaining nodes in the cluster. After the data has been redistributed, the node being removed will be marked as “removed” and will no longer participate in the cluster.
 
 It is important to ensure that all data has been successfully redistributed before decommissioning or shutting down the node being removed. This can be checked using nodetool status and monitoring the “UN” (up and normal) status of all nodes in the cluster. 
 It is recommended to perform a full repair of the cluster after removing a node to ensure data consistency. This can be done using nodetool repair command.
 
-Follow the below syntax to use `nodetool removenode` command:
+Follow the below syntax to use this command:
 ```
 nodetool [connection_options] removenode -- <status> | <force> | <ID>
 ```
 
-### 7.16. Nodetool assasinate:
-This command is used to `assassinate` a node and should be performed when the `nodetool removenode` command fails.
+**nodetool assasinate:**  
+`nodetool assasinate` assasinates a node and should be performed when the `nodetool removenode` command fails.
 
-Follow the below syntax to use nodetool assasinate command:
+Follow the below syntax to use this command:
 ```
 nodetool [options] assassinate <ip_address>
 ```
 
-### 7.17. Nodetool repair:
+**nodetool repair:**  
 Since frequent data deletions and downtime in nodes may lead to data inconsistencies, nodetool repair ensures data consistency across all nodes in the cluster. It works by comparing the data on each node with the data on other nodes and resolving any inconsistencies. This is done by constructing a merkle tree whose leaves are the hashes of the individual keys.
 
 Note that while `nodetool repair` is running, it can cause increased network traffic and disk I/O on the nodes in the cluster. This can impact the performance of other applications running on the same nodes.  It can also cause temporary data unavailability during the repair process which can be mitigated by running repairs during off-peak hours or using incremental repair (new data since last repair) instead of full repair (complete data).
