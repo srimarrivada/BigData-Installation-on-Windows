@@ -1,4 +1,4 @@
-# Install Apache Cassandra 3.11.17 on Windows 10
+# Install Apache Cassandra 3.11.17 on Windows 10 and Access Cassandra Utilities
 **Apache Cassandra** is an open-source, highly scalable and distributed NoSQL (Not only SQL) database management system that is designed to handle large amounts of structured and unstructured data distributed across multiple commodity servers.
 
 **Apache Cassandra** is initially developed at **Facebook** with a combination of distribution storage and replication model from **Amazon Dynamo** and column-family data model from **Google Bigtable**. It has a distributed architecture where large volumes of structed and unstructured data can be stored on multiple commodity hardware machines which provides high availability with no single point of failure, making it a popular choice for enterprises needing robust data solutions.
