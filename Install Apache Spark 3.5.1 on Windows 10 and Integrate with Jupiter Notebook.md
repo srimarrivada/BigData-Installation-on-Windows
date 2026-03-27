@@ -1,13 +1,10 @@
 # Install Apache Spark 3.5.1 on Windows 10 and Integrate with Jupiter Notebook
 
-**Apache Spark** is a powerful open-source analytical and computing engine to process large scale data loads. It is heavily used in Data Engineering, Data Science and Machine learning projects 
-since it offers easy programming interface in various languages such as Python, SQL, Java, Scala and R. 
+**Apache Spark** is a powerful open-source analytical and computing engine to process large scale data loads. It is heavily used in Data Engineering, Data Science and Machine learning projects since it offers easy programming interface in various languages such as Python, SQL, Java, Scala and R. 
 
-Spark provides heavy processing tools such as **Spark SQL** for structured data processing, **MLib** for machine learning, **Graphx** for graph processing, **Structured Streaming** for real time data processing 
-and **pandas API** to handle pandas workloads.
+Spark provides heavy processing tools such as **Spark SQL** for structured data processing, **MLib** for machine learning, **Graphx** for graph processing, **Structured Streaming** for real time data processing and **pandas API** to handle pandas workloads.
 
-The key components of Spark include **Spark Driver**, **Spark Executor**, **Cluster Manager** and **Spark History Server (Web UI)**. Spark also offers various Command Line Interfaces 
-such as `spark-shell` (for Scala), `pyspark` (for Python), `sparkr` (for R) and `spark-sql` (for SQL) to execute the Spark code in different programming languages.
+The key components of Spark include **Spark Driver**, **Spark Executor**, **Cluster Manager** and **Spark History Server (Web UI)**. Spark also offers various Command Line Interfaces such as `spark-shell` (for Scala), `pyspark` (for Python), `sparkr` (for R) and `spark-sql` (for SQL) to execute the Spark code in different programming languages.
 
 Spark supports 4 cluster managers:
 
@@ -22,22 +19,18 @@ Spark supports 4 cluster managers:
 </br>
 
 The Spark applications can be run in three different modes:  
-* **Local Mode** – In local mode, Spark runs all processes with in a single JVM of the machine. It is the simple mode of deployment which is mostly used for testing purposes 
-and is best suited for uses who are just learning spark or testing small-scale data processing workflows.
+* **Local Mode** – In local mode, Spark runs all processes with in a single JVM of the machine. It is the simple mode of deployment which is mostly used for testing purposes and is best suited for uses who are just learning spark or testing small-scale data processing workflows.
 
-*	**Client Mode** – This is the **default** deployment mode in which the Spark driver component runs on the client machine from where the job is submitted and connects to cluster manager for resource allocation. 
-In this mode, if the machine or user session running the spark application terminates, the entire Spark application gets terminated with status fail. This mode is not ideal for Production deployments.
+* **Client Mode** – This is the **default** deployment mode in which the Spark driver component runs on the client machine from where the job is submitted and connects to cluster manager for resource allocation. In this mode, if the machine or user session running the spark application terminates, the entire Spark application gets terminated with status fail. This mode is not ideal for Production deployments.
 
-*	**Cluster Mode** – In this mode, the Spark driver component gets launched on any of the available nodes in the Spark cluster, instead of launching on the client machine from where the job is submitted. 
-Here, even if the local machine or user session is terminated, the spark application keeps running on the cluster. This mode is mostly used for processing large data sets and best suited for Production deployments.
+* **Cluster Mode** – In this mode, the Spark driver component gets launched on any of the available nodes in the Spark cluster, instead of launching on the client machine from where the job is submitted. Here, even if the local machine or user session is terminated, the spark application keeps running on the cluster. This mode is mostly used for processing large data sets and best suited for Production deployments.
 
 **Note:**  
 Apache Spark downloads are pre-packaged with Hadoop libraries for users to install standalone Spark cluster. 
 Spark also has “Hadoop free” download that allows us to install Spark on top of existing Hadoop cluster.
 </br>
 
-This document provides instructions to install two modes – **Standalone cluster** and **Hadoop cluster** - of **Apache Spark 3.x** with Python application programming interface 
-and integrate with Jupiter Notebook to execute Spark code.  
+This document provides instructions to install two modes – **Standalone cluster** and **Hadoop cluster** - of **Apache Spark 3.x** with Python application programming interface and integrate with Jupiter Notebook to execute Spark code.  
 You can also go through [this PDF document](/doc/Install%20Apache%20Spark%203.5.1%20on%20Windows%2010.pdf) for installation steps along with screenshots.  
 <br/>
 
@@ -696,12 +689,52 @@ spark.history.fs.cleaner.maxAge 7d
 ```
 </br>
 
-## 7. Write Sample PySpark Code
+## 7. Spark Connect:
+In **Apache Spark 3.4** release, **Spark Connect** feature was introduced which provides a decoupled client-server architecture that allows remote connectivity to Spark cluster using the Spark’s DataFrame API. The separation between client and server allows Spark and its open ecosystem to be leveraged from everywhere.
+
+Spark Connect is a thin API that can be embedded in application servers, IDEs, Notebooks and programming languages. This API is available with `spark-connect-xxx.jar` library.
+
+## 7.1. Start Spark Connect Server:
+Open a new **Command Prompt** or **Windows PowerShell** and run the following command to start the **Spark Connect** service:
+```
+spark-submit --class org.apache.spark.sql.connect.service.SparkConnectServer --name "Spark Connect server" --packages org.apache.spark:spark-connect_2.12:3.5.1
+```
+It displays that **Spark connect server is started at `0:0:0:0:15002`** (on a default port).
+
+## 7.2. Create Spark Connect Session:
+Set `SPARK_REMOTE` environment variable which enables Spark session to be a Spark Connect session.
+
+Open a **Command Prompt** and run the following commands to set `SPARK_REMOTE` environment variable and start **PySpark** which creates a Spark connect session
+```
+set SPARK_REMOTE=sc://localhost:15002
+pyspark
+```
+In Pyspark shell, run the following command to check the Spark session type:
+```
+type(spark)
+```
+The spark session type displays `sql.connect.session` which indicates that this PySpark shell is using Spark Connect.
+
+If `SPARK_REMOTE` environment variable is not set, Spark Connect server can be connected by using `--remote` flag.  
+Open a new **Command Prompt** and run the following command to launch **PySpark** connecting to Spark Connect server:
+```
+pyspark --remote "sc://localhost:15002"
+```
+It displays a message that **Client connected to Spark Connect server at `localhost:15002`**.  
+
+Run PySpark code in the shell to see Spark Connect in action:
+```
+data = [(1,"Sarah"), (2,"Maria")]
+df = spark.createDataFrame(data, ["id","name"])
+df.show()
+```
+
+## 8. Write Sample PySpark Code
 Let us write some sample Pyspark code to read a CSV file and write the data into JSON format.
 
 We will write the code to read/write CSV file in local file system as well as in HDFS.
 
-### 7.1. Read/Write Locally:
+### 8.1. Read/Write Locally:
 Since our `SPARK_HOME` is currently set to `spark-3.5.1-bin-without-hadoop` version, all files are expected to be read or written to HDFS. 
 
 To read or write files in local file system, we would need additional jar files that doesnot come with `spark-3.5.1-bin-without-hadoop` version. So, let us temporarily set the `SPARK_HOME` environment 
@@ -731,7 +764,7 @@ After executing the above code, the output will be generated in `D:\Datasets\spa
 
 Open Spark Web UI at http://localhost:4043 where you will see some jobs have been submitted for the code that was executed from the Pyspark shell.
 
-### 7.2. Read/Write HDFS:
+### 8.2. Read/Write HDFS:
 First, let us copy the input file `departments.csv` into HDFS
 ```
 hadoop fs -put "D:\Datasets\departments.csv" /spark-input
@@ -769,7 +802,7 @@ Open Spark Web UI at http://localhost:4043 where you can notice some jobs submit
 <br/>
 <br/>
 
-## 8. Spark SQL:
+## 9. Spark SQL:
 The Spark SQL CLI is a conventional tool to run the Hive metastore service in local mode and execute queries from command line. It creates an embedded `metastore_db` directory 
 (a relational database to manage the metadata of relational entities such as databases, tables, columns partitions) in the location from where ever `spark-sql` is started.
 
@@ -825,7 +858,7 @@ Similarly, we can run any queries from `spark-sql` CLI that connects to Hive met
 <br/>
 <br/>
 
-## 9. Spark Beeline:
+## 10. Spark Beeline:
 Spark provides `beeline` CLI that runs on Thrift JDBC/ODBC server (corresponds to `hiveserver2` service in built-in Hive). Spark SQL can also act as a distributed query engine using its JDBC/ODBC server. 
 
 Since `beeline` command line interface requires hive libraries that comes with `spark-3.5.1-bin-hadoop3` version, make sure that your `SPARK_HOME` environment varaible is set to the location 
@@ -833,7 +866,7 @@ where `spark-3.5.1-bin-hadoop3` version was installed.
 
 To start using Spark provided beeline, we need to first start the Spark Master, Worker and Thrift JDBC/ODBC services.
 
-### 9.1. Start Spark Master:
+### 10.1. Start Spark Master:
 Open a new **Command Prompt** or **Windows PowerShell** and run the following command to start the **Spark Master** service:
 ```
 spark-class org.apache.spark.deploy.master.Master
@@ -843,7 +876,7 @@ Here, we can see that Spark master is started at `spark://<ipaddress>:7077` i.e 
 **Note:**  
 If you are unable to see any logging on the console, then open `log4j2.properties` file in `SPARK_HOME\conf` location and change the `rootLogger.level` property to `info` value.
 
-### 9.2. Start Spark Worker:
+### 10.2. Start Spark Worker:
 Open a new **Command Prompt** or **Windows PowerShell** and run the following command to start the **Spark Worker** service 
 _(Make sure that you replace `<ipaddress>` value below with IP address mentioned in your Spark Master URL)_
 ```
@@ -853,7 +886,7 @@ spark-class org.apache.spark.deploy.worker.Worker spark://<ipaddress>:7077
 Here, we can see that Spark worker is started at `<ipaddress>:3884` (on a random port) with available number of cores and RAM running on the machine. WorkerWebUI is started at `http://<ipaddress>:8081` 
 by default.
 
-### 9.3. Start Spark Thrift Server:
+### 10.3. Start Spark Thrift Server:
 Spark Thrift services tries to access (or create if not available) an embedded `metastore_db` directory in the location from where ever it is started. 
 
 Open a new **Command Prompt** or **Windows PowerShell** and run the following command to start the Spark Thrift service 
@@ -864,7 +897,7 @@ spark-submit --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2 --
 
 After executing the above command, you will see that Spark **ThriftBinaryCLI** service is started on port 10000 and **HiveServer2** and **HiveThriftServer2** services are also started.
 
-### 9.4. Start Beeline:
+### 10.4. Start Beeline:
 Open a new **Command Prompt** or **Windows PowerShell** and run the following command to start the beeline CLI:
 ```
 beeline
@@ -892,7 +925,7 @@ Use this command to exit out of beeline shell:
 ```
 <br/>
 
-## 10. Spark with Jupiter Notebook:
+## 11. Spark with Jupiter Notebook:
 Now, we will see how to integrate **Pyspark** with **Jupiter Notebook** available in Anaconda installation so that we can execute Spark code on Jupiter Notebook directly.
 
 First, make sure that Anaconda `scripts` location is added to `PATH` environment variable.
